@@ -6,8 +6,14 @@ GHDL := ghdl
 GHDLFLAGS := --std=08
 
 SRC_FILES := $(wildcard $(SRC_DIR)/*.vhd)
+
+# for test `aes_top`
 TB_FILE := $(TB_DIR)/aes_tb.vhd
 TOP_ENTITY := aes_tb
+
+# for test `subbytes`
+# TB_FILE := $(TB_DIR)/tb_subbytes.vhd
+# TOP_ENTITY := tb_subbytes
 
 VCD_FILE := wave.vcd
 EXEC := $(TOP_ENTITY)
