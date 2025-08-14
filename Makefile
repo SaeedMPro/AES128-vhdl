@@ -15,6 +15,11 @@ TOP_ENTITY := aes_tb
 # TB_FILE := $(TB_DIR)/subbytes_tb.vhd
 # TOP_ENTITY := subbytes_tb
 
+# for test `shiftrows`
+# TB_FILE := $(TB_DIR)/shiftrows_tb.vhd
+# TOP_ENTITY := shiftrows_tb
+
+
 VCD_FILE := wave.vcd
 EXEC := $(TOP_ENTITY)
 
