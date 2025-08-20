@@ -6,14 +6,14 @@ entity addRoundKey is
 		port(
 		state_matrix: in MATRIX;
 		key : in MATRIX;
-		output_matrix: buffer MATRIX
+		output_matrix: out MATRIX
 	);
 end addRoundKey;
 
 architecture Behavioral of addRoundKey is
 
 begin
-	process(state_matrix)
+	process(state_matrix,key)
 	begin
 		for i in 0 to 3 loop 
 			for j in 0 to 3 loop

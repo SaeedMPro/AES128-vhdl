@@ -1,14 +1,12 @@
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
-use work.aes_sbox_pkg.all;
-use work.aes_rcon_pkg.all;
-use work.key_expansion_utils_pkg.all;
+use work.Utilities.all;
 
 entity key_expansion is
     port(
         key_in     : in  std_logic_vector(127 downto 0);
-        round_keys : out std_logic_vector(1407 downto 0) -- 11 ???? × 128 ???
+        round_keys : out std_logic_vector(1407 downto 0)
     );
 end entity;
 
@@ -19,13 +17,12 @@ begin
     process(key_in)
         variable W_var : word_array;
     begin
-        -- ???????? ???? ?????
+	 
         W_var(0) := key_in(127 downto 96);
         W_var(1) := key_in(95 downto 64);
         W_var(2) := key_in(63 downto 32);
         W_var(3) := key_in(31 downto 0);
 
-        -- ???????? ????? ????
         for i in 4 to 43 loop
             if (i mod 4 = 0) then
                 W_var(i) := std_logic_vector(unsigned(W_var(i-4)) xor unsigned(SubWord(RotWord(W_var(i-1)))) xor unsigned(RCON((i/4)-1)));
@@ -34,12 +31,10 @@ begin
             end if;
         end loop;
 
-        -- ???????? ?????????
         for i in 0 to 43 loop
             W(i) <= W_var(i);
         end loop;
 
-        -- ????? ??????? ???? ??? ?? ?????
         round_keys <= W_var(0) & W_var(1) & W_var(2) & W_var(3)
                     & W_var(4) & W_var(5) & W_var(6) & W_var(7)
                     & W_var(8) & W_var(9) & W_var(10) & W_var(11)
