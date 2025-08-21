@@ -1,10 +1,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
 
-entity tb_key_expansion is
-end entity;
+entity tb_KeyExpansion is
+end tb_KeyExpansion;
 
-architecture sim of tb_key_expansion is
+architecture sim of tb_KeyExpansion is
     signal key_in     : std_logic_vector(127 downto 0);
     signal round_keys : std_logic_vector(1407 downto 0);
 

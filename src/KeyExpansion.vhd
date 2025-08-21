@@ -3,14 +3,14 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.Utilities.all;
 
-entity key_expansion is
+entity KeyExpansion is
     port(
         key_in     : in  std_logic_vector(127 downto 0);
         round_keys : out std_logic_vector(1407 downto 0)
     );
-end entity;
+end KeyExpansion;
 
-architecture Behavioral of key_expansion is
+architecture Behavioral of KeyExpansion is
     type word_array is array (0 to 43) of std_logic_vector(31 downto 0);
     signal W : word_array;
 begin

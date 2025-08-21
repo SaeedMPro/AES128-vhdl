@@ -3,11 +3,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.Utilities.all;
 
-entity tb_invSubBytes is
-end tb_invSubBytes;
+entity tb_subbytes is
+end tb_subbytes;
 
-architecture behavior of tb_invSubBytes is
-
+architecture sim of tb_subbytes is
     component invSubBytes is
         port(
             state_in  : in  MATRIX;
