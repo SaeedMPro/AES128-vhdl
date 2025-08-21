@@ -5,7 +5,7 @@ use work.Utilities.all;
 entity mixColumn is
 	port(
 		state_matrix: in MATRIX;
-		output_matrix: buffer MATRIX
+		output_matrix: out MATRIX
 	);
 end mixColumn;
 
