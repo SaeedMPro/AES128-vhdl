@@ -88,7 +88,7 @@ make wave
 make clean
 ```
 
-3. Check the waveform or console output for **PASS/FAIL** results from the testbenches.
+3. Check the waveform results from the testbenches.
 
 ---
 
