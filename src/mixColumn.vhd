@@ -19,8 +19,8 @@ architecture Behavioral of mixColumn is
 		
 begin
 		process(state_matrix)
-			variable shifted: WORD_8BIT;
-			variable temp: WORD_8BIT;
+			variable shifted: BYTE;
+			variable temp: BYTE;
 		begin
 			for i in 0 to 3 loop
 				for j in 0 to 3 loop

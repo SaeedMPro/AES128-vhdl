@@ -28,8 +28,8 @@ architecture behavior of tb_aes128 is
    signal Data_in : std_logic_vector(127 downto 0) := (others => '0');
    signal key : std_logic_vector(127 downto 0) := (others => '0');
 
-   signal Data_out : std_logic_vector(127 downto 0);
-   signal ready : std_logic;
+   signal Data_out : std_logic_vector(127 downto 0) := (others => 'X');
+   signal ready : std_logic := '0';
 
    constant clock_period : time := 10 ns;
  

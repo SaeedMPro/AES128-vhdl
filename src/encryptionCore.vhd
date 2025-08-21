@@ -44,7 +44,7 @@ architecture Behavioral of encryptionCore is
 			state_out: out MATRIX
 		);
 	end component;
-	component key_expansion is
+	component KeyExpansion is
     port(
         key_in     : in  std_logic_vector(127 downto 0);
         round_keys : out std_logic_vector(1407 downto 0)
@@ -68,7 +68,7 @@ architecture Behavioral of encryptionCore is
 	
 	
 begin
-		roundKeyGen:key_expansion port map(key,r_key);
+		roundKeyGen:KeyExpansion port map(key,r_key);
 	--round 0
 	
 		r_key_matrix(0)<= plaintext_to_matrix(r_key(1407 downto 1280));

@@ -8,14 +8,14 @@ architecture sim of tb_KeyExpansion is
     signal key_in     : std_logic_vector(127 downto 0);
     signal round_keys : std_logic_vector(1407 downto 0);
 
-    component key_expansion
+    component KeyExpansion
         port(
             key_in       : in  std_logic_vector(127 downto 0);
             round_keys   : out std_logic_vector(1407 downto 0)
         );
     end component;
 begin
-    uut: key_expansion port map (
+    uut: KeyExpansion port map (
         key_in => key_in,
         round_keys => round_keys
     );

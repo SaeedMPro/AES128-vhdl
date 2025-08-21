@@ -30,12 +30,12 @@ architecture Behavioral of aes128 is
 		end component;
 		component decryptionCore
           port(
-                  clock: in std_logic;
-						reset: in std_logic;
-						Data_in: in MATRIX;
-						key: in std_logic_vector(127 downto 0);
-						Data_out: out MATRIX;
-						ready: out std_logic
+				clock: in std_logic;
+				reset: in std_logic;
+				Data_in: in MATRIX;
+				key: in std_logic_vector(127 downto 0);
+				Data_out: out MATRIX;
+				ready: out std_logic
           );
       end component;
 		signal input_matrix,dec_output_matrix,enc_output_matrix: MATRIX;
