@@ -73,21 +73,21 @@ EXEC := $(TOP_ENTITY)
 all: run
 
 analyze:
-  @echo "Analyzing source files..."
-  $(GHDL) -i $(GHDLFLAGS) $(SRC_FILES) $(TB_FILE)
+	@echo "Analyzing source files..."
+	$(GHDL) -i $(GHDLFLAGS) $(SRC_FILES) $(TB_FILE)
 
 build:
-  @echo "Building..."
-  $(GHDL) -m $(GHDLFLAGS) $(TOP_ENTITY)
+	@echo "Building..."
+	$(GHDL) -m $(GHDLFLAGS) $(TOP_ENTITY)
 
 run: analyze build
-  @echo "Running simulation..."
-  $(GHDL) -r $(GHDLFLAGS) $(TOP_ENTITY) --vcd=$(VCD_FILE)
+	@echo "Running simulation..."
+	$(GHDL) -r $(GHDLFLAGS) $(TOP_ENTITY) --vcd=$(VCD_FILE) --stop-time=1000ns
 
 wave:
-  gtkwave $(VCD_FILE)
+	gtkwave $(VCD_FILE)
 
 clean:
-  rm -f $(EXEC) *.o *.cf $(VCD_FILE)
+	rm -f $(EXEC) *.o *.cf $(VCD_FILE)
 
 .PHONY: all analyze build run clean wave

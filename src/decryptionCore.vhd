@@ -1,21 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
-entity decryptionCore is
-end decryptionCore;
-
-architecture Behavioral of decryptionCore is
-
-begin
-
-
-end Behavioral;
-
-
-library IEEE;
-use IEEE.STD_LOGIC_1164.ALL;
 use work.Utilities.all;
-
 
 entity decryptionCore is
 	port(
@@ -61,7 +46,7 @@ architecture Behavioral of decryptionCore is
 			state_out: out MATRIX
 		);
 	end component;
-	component key_expansion is
+	component KeyExpansion is
     port(
         key_in     : in  std_logic_vector(127 downto 0);
         round_keys : out std_logic_vector(1407 downto 0)
@@ -85,7 +70,7 @@ architecture Behavioral of decryptionCore is
 	
 	
 begin
-		roundKeyGen:key_expansion port map(key,r_key);
+		roundKeyGen:KeyExpansion port map(key,r_key);
 	--round 0
 	
 		r_key_matrix(0)<= plaintext_to_matrix(r_key(127 downto 0));
