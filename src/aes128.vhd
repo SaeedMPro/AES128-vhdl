@@ -28,12 +28,22 @@ architecture Behavioral of aes128 is
 				ready: out std_logic
 			);
 		end component;
-		signal input_matrix,output_matrix: MATRIX;
-		signal ready_signal: std_logic;
+		component decryptionCore
+          port(
+                  clock: in std_logic;
+						reset: in std_logic;
+						Data_in: in MATRIX;
+						key: in std_logic_vector(127 downto 0);
+						Data_out: out MATRIX;
+						ready: out std_logic
+          );
+      end component;
+		signal input_matrix,dec_output_matrix,enc_output_matrix: MATRIX;
+		signal enc_ready_signal,dec_ready_signal: std_logic;
 begin
 	 input_matrix <= plaintext_to_matrix(Data_in);
-	 encryptioning:encryptionCore port map(clock,reset,input_matrix,key,output_matrix,ready_signal);
-	 
+	 encryptioning:encryptionCore port map(clock,reset,input_matrix,key,enc_output_matrix,enc_ready_signal);
+	 decryptioning:decryptionCore port map(clock,reset,input_matrix,key,dec_output_matrix,dec_ready_signal);
 	 process(clock, reset)
     begin
         if reset = '1' then
@@ -43,12 +53,13 @@ begin
             if start = '1' then
                 if mode = '0' then   -- encryption
 						  
-                    Data_out <= matrix_to_plaintext(output_matrix);
-						  ready <= ready_signal;
+                    Data_out <= matrix_to_plaintext(enc_output_matrix);
+						  ready <= enc_ready_signal;
 						  
                 elsif mode = '1' then -- decryption
 					 
-                    -- TODO: implement decryption datapath
+						  Data_out <= matrix_to_plaintext(dec_output_matrix);
+						  ready <= dec_ready_signal;
 						  
                 end if;
             else

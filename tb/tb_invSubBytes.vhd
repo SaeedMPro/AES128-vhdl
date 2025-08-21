@@ -3,12 +3,12 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.Utilities.all;
 
-entity subbytes_tb is
+entity tb_invSubBytes is
 end entity;
 
-architecture sim of subbytes_tb is
+architecture behavior of tb_invSubBytes is
 
-    component subbytes is
+    component invSubBytes is
         port(
             state_in  : in  MATRIX;
             state_out : out MATRIX
@@ -19,23 +19,19 @@ architecture sim of subbytes_tb is
     signal state_out : MATRIX;
 
     constant expected_out : std_logic_vector(127 downto 0) :=
-        x"d4e0b81e27bfb44111985d52aef1e530";
+        x"BB3311C488E782EBA4F1C74974364D2E";
 begin
-    uut: subbytes
+    uut: invSubBytes
         port map(
             state_in  => state_in,
             state_out => state_out
         );
-
-    process
-    begin
+		  
         state_in <=(
-    (x"19", x"3d", x"e3", x"be"),
-    (x"a0", x"f4", x"e2", x"2b"),
-    (x"9a", x"c6", x"8d", x"2a"),
-    (x"e9", x"f8", x"48", x"08")
+    (x"ea", x"c4", x"49", x"92"),
+    (x"c3", x"94", x"a1", x"05"),
+    (x"82", x"13", x"c6", x"e3"),
+    (x"1c", x"e9", x"3b", x"31")
 	);
-        wait;
-    end process;
 
 end architecture;
