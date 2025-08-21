@@ -3,10 +3,10 @@
   use ieee.numeric_std.aLL;
   use work.Utilities.all;
 
-  entity testbench is
-  end testbench;
+  entity tb_addRoundKey is
+  end tb_addRoundKey;
 
-  architecture behavior of testbench is
+  architecture behavior of tb_addRoundKey is
 
          component addRoundKey is
 				port(

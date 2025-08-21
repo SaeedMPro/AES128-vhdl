@@ -3,10 +3,10 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 use work.Utilities.all;
 
-entity subbytes_tb is
-end entity;
+entity tb_subbytes is
+end tb_subbytes;
 
-architecture sim of subbytes_tb is
+architecture sim of tb_subbytes is
 
     component subbytes is
         port(

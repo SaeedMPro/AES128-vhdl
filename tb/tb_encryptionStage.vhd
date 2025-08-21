@@ -3,10 +3,10 @@
   use ieee.numeric_std.all;
   use work.Utilities.all;
   
-  entity testbench is
-  end testbench;
+  entity tb_encryptionStage is
+  end tb_encryptionStage;
 
-  architecture behavior of testbench is 
+  architecture behavior of tb_encryptionStage is 
 
           component encryptionStage
           port(

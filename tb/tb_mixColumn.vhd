@@ -3,10 +3,10 @@
   use ieee.numeric_std.aLL;
   use work.Utilities.all;
 
-  entity testbench is
-  end testbench;
+  entity tb_mixColumn is
+  end tb_mixColumn;
 
-  architecture behavior of testbench is
+  architecture behavior of tb_mixColumn is
 
          component mixColumn is
 				port(
