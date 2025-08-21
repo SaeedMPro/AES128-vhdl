@@ -55,7 +55,7 @@ begin
    end process;
  
 	start <= '1';
-	mode <= '0';
+	mode <= '0','1' after 230 ns;
 	
 	Data_in <= x"3243f6a8885a308d313198a2e0370734",
 	x"54776F204F6E65204E696E652054776F" after 10 ns,
@@ -68,7 +68,20 @@ begin
 	x"30C81C46A35CE411E5FBC1191A0A52EF" after 80 ns,
 	x"00112233445566778899aabbccddeeff" after 90 ns,
 	x"00000000000000000000000000000000" after 100 ns,
-	x"ffffffffffffffffffffffffffffffff" after 110 ns;
+	x"ffffffffffffffffffffffffffffffff" after 110 ns,
+	
+	x"3925841d02dc09fbdc118597196a0b32" after 240 ns,
+	x"29C3505F571420F6402299B31A02D73A" after 250 ns,
+	x"3AD77BB40D7A3660A89ECAF32466EF97" after 260 ns,
+	x"F5D3D58503B9699DE785895A96FDBAAF" after 270 ns,
+	x"43B1CD7F598ECE23881B00E3ED030688" after 280 ns,
+	x"7B0C785E27E8AD3F8223207104725DD4" after 290 ns,
+	x"3AD77BB40D7A3660A89ECAF32466EF97" after 300 ns,
+	x"F5D3D58503B9699DE785895A96FDBAAF" after 310 ns,
+	x"43B1CD7F598ECE23881B00E3ED030688" after 320 ns,
+	x"69C4E0D86A7B0430D8CDB78070B4C55A" after 330 ns,
+	x"6D251E6944B051E04EAA6FB4DBF78465" after 340 ns,
+	x"bcbf217cb280cf30b2517052193ab979" after 350 ns; 
 
 	
 	
@@ -77,8 +90,15 @@ begin
 	x"2B7E151628AED2A6ABF7158809CF4F3C" after 20 ns,
 	x"000102030405060708090a0b0c0d0e0f" after 90 ns,
 	x"10a58869d74be5a374cf867cfb473859" after 100 ns,
-	x"ffffffffffffffffffffffffffffffff" after 110 ns;
+	x"ffffffffffffffffffffffffffffffff" after 110 ns,
 	
-	reset <= '1' after 235 ns;
-
+	x"2b7e151628aed2a6abf7158809cf4f3c" after 240 ns,
+	x"5468617473206D79204B756E67204675" after 250 ns,
+	x"2B7E151628AED2A6ABF7158809CF4F3C" after 260 ns,
+	x"000102030405060708090a0b0c0d0e0f" after 330 ns,
+	x"10a58869d74be5a374cf867cfb473859" after 340 ns,
+	x"ffffffffffffffffffffffffffffffff" after 350 ns;
+	
+	
+	reset <= '1' after 230 ns , '0' after 240 ns,'1' after 475 ns;
 END;
