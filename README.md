@@ -76,6 +76,8 @@ cd AES128-vhdl
 ```
 
 2. Use the **Makefile** for compilation, simulation, and waveform generation:
+   *(You can change the top-level testbench by uncommenting the relevant section in the Makefile. By default, it runs `tb_aes128.vhd`.)*
+
 
 ```bash
 # Analyze and elaborate all files
