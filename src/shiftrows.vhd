@@ -16,8 +16,6 @@ begin
     process(state_in)
         variable shifted_matrix : MATRIX;
     begin
-
-        -- perform ShiftRows
         for col in 0 to 3 loop
             shifted_matrix(0, col) := state_in(0, col);
             shifted_matrix(1, col) := state_in(1, (col + 1) mod 4);

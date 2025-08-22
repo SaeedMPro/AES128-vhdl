@@ -12,19 +12,19 @@ end mixColumn;
 architecture Behavioral of mixColumn is
 		
 begin
-		process(state_matrix)
-			variable shifted: BYTE;
-			variable temp: BYTE;
-		begin
-			for i in 0 to 3 loop
-				for j in 0 to 3 loop
-					temp := x"00";
-					for k in 0 to 3 loop
-							temp := temp xor mul_GF(state_matrix(k,j),mixColumn_matrix(i,k));
-					end loop;
-					output_matrix(i,j) <= temp;
+	process(state_matrix)
+		variable shifted: BYTE;
+		variable temp: BYTE;
+	begin
+		for i in 0 to 3 loop
+			for j in 0 to 3 loop
+				temp := x"00";
+				for k in 0 to 3 loop
+					temp := temp xor mul_GF(state_matrix(k,j),mixColumn_matrix(i,k));
 				end loop;
+				output_matrix(i,j) <= temp;
 			end loop;
-		end process;
+		end loop;
+	end process;
 end Behavioral;
 

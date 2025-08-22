@@ -2,30 +2,43 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
-
 package Utilities is
+    subtype BYTE is std_logic_vector(7 downto 0);
+    type MATRIX is array (0 to 3,0 to 3) of BYTE;
+    type stateOut is array (0 to 11) of MATRIX;
+    type pipelineData is 
+        record
+            state: MATRIX;
+            key: std_logic_vector(1407 downto 0);
+            valid: std_logic;
+        end record;
+    type pipelineDataArray is array (0 to 10) of pipelineData;
+    type roundKeyMatrix is array(0 to 10) of MATRIX;
 
- subtype BYTE is std_logic_vector(7 downto 0);
- type MATRIX is array (0 to 3,0 to 3) of BYTE;
- type stateOut is array (0 to 11) of MATRIX;
- function plaintext_to_matrix(input_text: in std_logic_vector) return MATRIX;
- function matrix_to_plaintext(input_matrix: in MATRIX) return std_logic_vector;
- 	constant mixColumn_matrix : MATRIX :=(
-    (x"02", x"03", x"01", x"01"),
-    (x"01", x"02", x"03", x"01"),
-    (x"01", x"01", x"02", x"03"),
-    (x"03", x"01", x"01", x"02")
-);
- constant inv_mixColumn_matrix : MATRIX := (
+    function plaintext_to_matrix(input_text: in std_logic_vector) return MATRIX;
+    function matrix_to_plaintext(input_matrix: in MATRIX) return std_logic_vector;
+    
+    function two_mul_GF(input : BYTE) return BYTE;
+    function mul_GF(input1 : BYTE; input2 : BYTE) return BYTE;
+    
+    function RotWord(word : std_logic_vector(31 downto 0)) return std_logic_vector;
+    function SubWord(word : std_logic_vector(31 downto 0)) return std_logic_vector;
+
+    constant mixColumn_matrix : MATRIX :=(
+        (x"02", x"03", x"01", x"01"),
+        (x"01", x"02", x"03", x"01"),
+        (x"01", x"01", x"02", x"03"),
+        (x"03", x"01", x"01", x"02")
+    );
+    constant inv_mixColumn_matrix : MATRIX := (
         (x"0E", x"0B", x"0D", x"09"),
         (x"09", x"0E", x"0B", x"0D"),
         (x"0D", x"09", x"0E", x"0B"),
         (x"0B", x"0D", x"09", x"0E")
     );
- function two_mul_GF(input : BYTE) return BYTE;
- function mul_GF(input1 : BYTE; input2 : BYTE) return BYTE;
- type sbox_array is array (0 to 255) of std_logic_vector(7 downto 0);
- constant SBOX : sbox_array := (
+
+    type sbox_array is array (0 to 255) of std_logic_vector(7 downto 0);
+    constant SBOX : sbox_array := (
         x"63", x"7C", x"77", x"7B", x"F2", x"6B", x"6F", x"C5",
         x"30", x"01", x"67", x"2B", x"FE", x"D7", x"AB", x"76",
         x"CA", x"82", x"C9", x"7D", x"FA", x"59", x"47", x"F0",
@@ -59,7 +72,7 @@ package Utilities is
         x"8C", x"A1", x"89", x"0D", x"BF", x"E6", x"42", x"68",
         x"41", x"99", x"2D", x"0F", x"B0", x"54", x"BB", x"16"
     );
-	 constant INV_SBOX : sbox_array := (
+    constant INV_SBOX : sbox_array := (
         x"52", x"09", x"6A", x"D5", x"30", x"36", x"A5", x"38",
         x"BF", x"40", x"A3", x"9E", x"81", x"F3", x"D7", x"FB",
         x"7C", x"E3", x"39", x"82", x"9B", x"2F", x"FF", x"87",
@@ -93,104 +106,102 @@ package Utilities is
         x"17", x"2B", x"04", x"7E", x"BA", x"77", x"D6", x"26",
         x"E1", x"69", x"14", x"63", x"55", x"21", x"0C", x"7D"
     );
-	 type rcon_array is array(0 to 10) of std_logic_vector(31 downto 0);
+
+    type rcon_array is array(0 to 10) of std_logic_vector(31 downto 0);
     constant RCON : rcon_array := (
         x"01000000", x"02000000", x"04000000", x"08000000", x"10000000",
         x"20000000", x"40000000", x"80000000", x"1B000000", x"36000000", x"00000000"
     );
-	 function RotWord(word : std_logic_vector(31 downto 0)) return std_logic_vector;
-    function SubWord(word : std_logic_vector(31 downto 0)) return std_logic_vector;
-	 type pipelineData is 
-		record
-			state: MATRIX;
-			key: std_logic_vector(1407 downto 0);
-			valid: std_logic;
-		end record;
-	 type pipelineDataArray is array (0 to 10) of pipelineData;
-	 type roundKeyMatrix is array(0 to 10) of MATRIX;
+        
  end Utilities;
 
 package body Utilities is
- function plaintext_to_matrix(input_text: in std_logic_vector) return MATRIX is
-	variable output_matrix: MATRIX;
- begin
-	for j in 3 downto 0 loop 
-			for i in 3 downto 0 loop
-				output_matrix(i,j) := input_text(input_text'high-(j*32 + i*8) downto (input_text'high-(j*32 + i*8))-7);
-			end loop;
-	end loop;
-	return output_matrix;
- end;
- function matrix_to_plaintext(input_matrix: in MATRIX) return std_logic_vector is
-	variable output_text: std_logic_vector(127 downto 0);
- begin
-	for j in 3 downto 0 loop 
+
+    function plaintext_to_matrix(input_text: in std_logic_vector) return MATRIX is
+        variable output_matrix: MATRIX;
+    begin
+        for j in 3 downto 0 loop 
+                for i in 3 downto 0 loop
+                    output_matrix(i,j) := input_text(input_text'high-(j*32 + i*8) downto (input_text'high-(j*32 + i*8))-7);
+                end loop;
+        end loop;
+        return output_matrix;
+    end function;
+
+    function matrix_to_plaintext(input_matrix: in MATRIX) return std_logic_vector is
+        variable output_text: std_logic_vector(127 downto 0);
+    begin
+        for j in 3 downto 0 loop 
 			for i in 3 downto 0 loop
 				output_text(127-(j*32 + i*8) downto (127-(j*32 + i*8))-7) := input_matrix(i,j);
 			end loop;
-	end loop;
-	return output_text;
- end;
- function RotWord(word : std_logic_vector(31 downto 0)) return std_logic_vector is
-	  variable w : std_logic_vector(31 downto 0);
- begin
-	  w := word(23 downto 0) & word(31 downto 24);
-	  return w;
- end;
+        end loop;
+        return output_text;
+    end function;
 
- function SubWord(word : std_logic_vector(31 downto 0)) return std_logic_vector is
-	  variable w : std_logic_vector(31 downto 0);
- begin
-	  for i in 0 to 3 loop
-			w(8*(3-i)+7 downto 8*(3-i)) := SBOX(to_integer(unsigned(word(8*(3-i)+7 downto 8*(3-i)))));
-	  end loop;
-	  return w;
- end;
- function two_mul_GF(input : BYTE) return BYTE is
-    variable shifted : BYTE := (others => '0');
-    variable result  : BYTE := (others => '0');
-	begin
-    shifted := input(6 downto 0) & '0';
-    if input(7) = '1' then
-        result := shifted xor x"1B";
-    else
-        result := shifted;
-    end if;
-    return result;
-	end function;
+    function RotWord(word : std_logic_vector(31 downto 0)) return std_logic_vector is
+        variable w : std_logic_vector(31 downto 0);
+    begin
+        w := word(23 downto 0) & word(31 downto 24);
+        return w;
+    end function;
+
+    function SubWord(word : std_logic_vector(31 downto 0)) return std_logic_vector is
+        variable w : std_logic_vector(31 downto 0);
+    begin
+        for i in 0 to 3 loop
+                w(8*(3-i)+7 downto 8*(3-i)) := SBOX(to_integer(unsigned(word(8*(3-i)+7 downto 8*(3-i)))));
+        end loop;
+        return w;
+    end function;
+
+    function two_mul_GF(input : BYTE) return BYTE is
+        variable shifted : BYTE := (others => '0');
+        variable result  : BYTE := (others => '0');
+    begin
+        shifted := input(6 downto 0) & '0';
+        if input(7) = '1' then
+            result := shifted xor x"1B";
+        else
+            result := shifted;
+        end if;
+        return result;
+    end function;
+
 	function mul_GF(input1 : BYTE; input2 : BYTE) return BYTE is
-    variable t1, t2, t3, res : BYTE := (others => '0');
+        variable t1, t2, t3, res : BYTE := (others => '0');
 	begin
-    case input2 is
-        when x"01" =>
-            res := input1;
-        when x"02" =>
-            res := two_mul_GF(input1);
-        when x"03" =>
-            res := std_logic_vector(unsigned(two_mul_GF(input1)) xor unsigned(input1));
-        when x"09" =>
-            t1 := two_mul_GF(input1);
-            t2 := two_mul_GF(t1);
-            t3 := two_mul_GF(t2);
-            res := std_logic_vector(unsigned(t3) xor unsigned(input1));
-        when x"0B" =>
-            t1 := two_mul_GF(input1);      
-            t2 := two_mul_GF(t1);     
-            t3 := two_mul_GF(t2);     
-            res := std_logic_vector(unsigned(t3) xor unsigned(t1) xor unsigned(input1));
-        when x"0D" =>
-            t1 := two_mul_GF(input1);      
-            t2 := two_mul_GF(t1);     
-            t3 := two_mul_GF(t2);     
-            res := std_logic_vector(unsigned(t3) xor unsigned(t2) xor unsigned(input1));
-        when x"0E" =>
-            t1 := two_mul_GF(input1);      
-            t2 := two_mul_GF(t1);     
-            t3 := two_mul_GF(t2);     
-            res := std_logic_vector(unsigned(t3) xor unsigned(t2) xor unsigned(t1));
-        when others =>
-            res := (others => '0');
-    end case;
-    return res;
+        case input2 is
+            when x"01" =>
+                res := input1;
+            when x"02" =>
+                res := two_mul_GF(input1);
+            when x"03" =>
+                res := std_logic_vector(unsigned(two_mul_GF(input1)) xor unsigned(input1));
+            when x"09" =>
+                t1 := two_mul_GF(input1);
+                t2 := two_mul_GF(t1);
+                t3 := two_mul_GF(t2);
+                res := std_logic_vector(unsigned(t3) xor unsigned(input1));
+            when x"0B" =>
+                t1 := two_mul_GF(input1);      
+                t2 := two_mul_GF(t1);     
+                t3 := two_mul_GF(t2);     
+                res := std_logic_vector(unsigned(t3) xor unsigned(t1) xor unsigned(input1));
+            when x"0D" =>
+                t1 := two_mul_GF(input1);      
+                t2 := two_mul_GF(t1);     
+                t3 := two_mul_GF(t2);     
+                res := std_logic_vector(unsigned(t3) xor unsigned(t2) xor unsigned(input1));
+            when x"0E" =>
+                t1 := two_mul_GF(input1);      
+                t2 := two_mul_GF(t1);     
+                t3 := two_mul_GF(t2);     
+                res := std_logic_vector(unsigned(t3) xor unsigned(t2) xor unsigned(t1));
+            when others =>
+                res := (others => '0');
+        end case;
+        return res;
 	end function;
+
 end Utilities;

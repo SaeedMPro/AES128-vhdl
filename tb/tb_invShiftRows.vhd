@@ -19,8 +19,7 @@ architecture behavior of tb_invShiftRows is
     signal state_in  : MATRIX;
     signal state_out : MATRIX;
 
-    constant expected_out : std_logic_vector(127 downto 0) := 
-	 x"BB36C7EB88334D49A4E7112E74F182C4"; 
+    constant expected_out : std_logic_vector(127 downto 0) := x"BB36C7EB88334D49A4E7112E74F182C4"; 
 begin
     uut: invShiftRows
         port map(
@@ -28,11 +27,11 @@ begin
             state_out => state_out
         );
 
-        state_in <=(
-    (x"bb", x"88", x"a4", x"74"),
-    (x"33", x"e7", x"f1", x"36"),
-    (x"11", x"82", x"c7", x"4d"),
-    (x"c4", x"eb", x"49", x"2e")
+    state_in <=(
+        (x"bb", x"88", x"a4", x"74"),
+        (x"33", x"e7", x"f1", x"36"),
+        (x"11", x"82", x"c7", x"4d"),
+        (x"c4", x"eb", x"49", x"2e")
 	);
 end architecture;
 

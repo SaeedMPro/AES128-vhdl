@@ -36,11 +36,12 @@ architecture Behavioral of decryptionStage is
 		output_matrix: out MATRIX
 	);
 	end component;
+	
 	signal inv_sb_out,inv_sr_out,ark_out: MATRIX;
 begin
-		invSr:component invShiftRows port map(state_in,inv_sr_out);
-		invSb:component invSubBytes port map(inv_sr_out,inv_sb_out);
-		ark:component addRoundKey port map(inv_sb_out,key,ark_out);
-		invMc:component invMixColumn port map(ark_out,state_out);
+	invSr:component invShiftRows port map(state_in,inv_sr_out);
+	invSb:component invSubBytes port map(inv_sr_out,inv_sb_out);
+	ark:component addRoundKey port map(inv_sb_out,key,ark_out);
+	invMc:component invMixColumn port map(ark_out,state_out);
 end Behavioral;
 

@@ -17,34 +17,36 @@ entity aes128 is
 end aes128;
 
 architecture Behavioral of aes128 is
+	component encryptionCore is
+		port(
+			clock: in std_logic;
+			reset: in std_logic;
+			Data_in: in MATRIX;
+			key: in std_logic_vector(127 downto 0);
+			Data_out: out MATRIX;
+			ready: out std_logic
+		);
+	end component;
+	component decryptionCore
+		port(
+			clock: in std_logic;
+			reset: in std_logic;
+			Data_in: in MATRIX;
+			key: in std_logic_vector(127 downto 0);
+			Data_out: out MATRIX;
+			ready: out std_logic
+		);
+	end component;
 
-		component encryptionCore is
-			port(
-				clock: in std_logic;
-				reset: in std_logic;
-				Data_in: in MATRIX;
-				key: in std_logic_vector(127 downto 0);
-				Data_out: out MATRIX;
-				ready: out std_logic
-			);
-		end component;
-		component decryptionCore
-          port(
-				clock: in std_logic;
-				reset: in std_logic;
-				Data_in: in MATRIX;
-				key: in std_logic_vector(127 downto 0);
-				Data_out: out MATRIX;
-				ready: out std_logic
-          );
-      end component;
-		signal input_matrix,dec_output_matrix,enc_output_matrix: MATRIX;
-		signal enc_ready_signal,dec_ready_signal: std_logic;
+	signal input_matrix,dec_output_matrix,enc_output_matrix: MATRIX;
+	signal enc_ready_signal,dec_ready_signal: std_logic;
 begin
-	 input_matrix <= plaintext_to_matrix(Data_in);
-	 encryptioning:encryptionCore port map(clock,reset,input_matrix,key,enc_output_matrix,enc_ready_signal);
-	 decryptioning:decryptionCore port map(clock,reset,input_matrix,key,dec_output_matrix,dec_ready_signal);
-	 process(clock, reset)
+	input_matrix <= plaintext_to_matrix(Data_in);
+
+	encryptioning: encryptionCore port map(clock,reset,input_matrix,key,enc_output_matrix,enc_ready_signal);
+	decryptioning: decryptionCore port map(clock,reset,input_matrix,key,dec_output_matrix,dec_ready_signal);
+
+	process(clock, reset)
     begin
         if reset = '1' then
             Data_out <= (others => '0');
@@ -52,21 +54,16 @@ begin
         elsif rising_edge(clock) then
             if start = '1' then
                 if mode = '0' then   -- encryption
-						  
                     Data_out <= matrix_to_plaintext(enc_output_matrix);
-						  ready <= enc_ready_signal;
-						  
+					ready <= enc_ready_signal; 
                 elsif mode = '1' then -- decryption
-					 
-						  Data_out <= matrix_to_plaintext(dec_output_matrix);
-						  ready <= dec_ready_signal;
-						  
+					Data_out <= matrix_to_plaintext(dec_output_matrix);
+					ready <= dec_ready_signal;  
                 end if;
             else
                 ready <= '0';
             end if;
         end if;
     end process;
-
 end Behavioral;
 

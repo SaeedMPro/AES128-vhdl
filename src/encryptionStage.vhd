@@ -42,9 +42,9 @@ architecture Behavioral of encryptionStage is
 	end component;
 	signal sb_out,sr_out,mc_out: MATRIX;
 begin
-		sb:component subbytes port map(state_in,sb_out);
-		sr:component shiftrows port map(sb_out,sr_out);
-		mc:component mixColumn port map(sr_out,mc_out);
-		ark:component addRoundKey port map(mc_out,key,state_out);
+	sb:component subbytes port map(state_in,sb_out);
+	sr:component shiftrows port map(sb_out,sr_out);
+	mc:component mixColumn port map(sr_out,mc_out);
+	ark:component addRoundKey port map(mc_out,key,state_out);
 end Behavioral;
 
